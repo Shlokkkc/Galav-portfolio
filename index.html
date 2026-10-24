@@ -1,0 +1,2224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GALAV CHAUDHARI // Video Editor & 3D Artist — Galav_chaudhari_Portfolio</title>
+  
+  <meta name="title" content="GALAV CHAUDHARI // Video Editor & 3D Artist">
+  <meta name="description" content="Portfolio of Galav Chaudhari — After Effects, DaVinci Resolve & Blender 3D artist.">
+  <meta name="theme-color" content="#07080b">
+
+  <!-- Favicon -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Syne:wght@700;800&family=Space+Grotesk:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #07080b;
+      --surface: rgba(18, 19, 25, 0.9);
+      --surface-elevated: #151620;
+      --border: rgba(255, 255, 255, 0.08);
+      --border-light: rgba(255, 255, 255, 0.15);
+      --accent: #38bdf8;
+      --accent-3d: #c084fc;
+      --accent-green: #00ff88;
+      --playhead: #f43f5e;
+      --text: #f4f4f5;
+      --text-muted: #82828e;
+      --dv-v2: #d946ef;
+      --dv-purple-play: #7c3aed;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-font-smoothing: antialiased;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text);
+      font-family: 'Space Grotesk', sans-serif;
+      overflow: hidden;
+      width: 100vw;
+      height: 100vh;
+      height: 100dvh;
+      position: fixed;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Ambient Backdrop */
+    .ambient-gradient-stage {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 45%, #0f121a 0%, #06070a 100%);
+    }
+    .gradient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.28;
+      will-change: transform;
+      animation: driftOrb 24s ease-in-out infinite alternate;
+    }
+    .orb-cyan {
+      width: 55vw; height: 55vw;
+      background: radial-gradient(circle, #0284c7 0%, transparent 70%);
+      top: -15%; left: -10%;
+    }
+    .orb-purple {
+      width: 60vw; height: 60vw;
+      background: radial-gradient(circle, #9333ea 0%, transparent 70%);
+      bottom: -20%; right: -10%;
+      animation-duration: 28s;
+    }
+    @keyframes driftOrb {
+      0% { transform: translate3d(0, 0, 0) scale(1); }
+      50% { transform: translate3d(40px, -30px, 0) scale(1.06); }
+      100% { transform: translate3d(-30px, 35px, 0) scale(0.96); }
+    }
+    .grain-overlay {
+      position: fixed;
+      inset: 0;
+      background-image: radial-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 0);
+      background-size: 24px 24px;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    /* ========================================================
+       1. TOP NLE MASTER HEADER
+       ======================================================== */
+    .editor-top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 48px;
+      background: var(--surface);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem;
+      z-index: 100;
+      gap: 0.5rem;
+    }
+    .project-metadata {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      min-width: 0;
+      flex-shrink: 1;
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #22c55e;
+      box-shadow: 0 0 10px #22c55e;
+      flex-shrink: 0;
+    }
+    .timeline-name {
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .top-nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-shrink: 0;
+    }
+    .nav-pill-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.36rem 0.75rem;
+      border-radius: 6px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: all 0.2s;
+    }
+    .nav-pill-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+    .nav-pill-btn.primary {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: rgba(56, 189, 248, 0.4);
+      color: var(--accent);
+    }
+    .nav-pill-btn.primary:hover {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* Broadcast HUD Overlay */
+    .broadcast-hud {
+      position: fixed;
+      top: 60px;
+      right: 1.4rem;
+      background: rgba(15, 17, 23, 0.9);
+      border: 1px solid var(--border);
+      padding: 0.35rem 0.75rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--accent);
+      backdrop-filter: blur(12px);
+      z-index: 95;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: all 0.25s ease;
+      pointer-events: none;
+    }
+    .broadcast-hud.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========================================================
+       2. SHOWREEL PREVIEW WINDOW UI
+       ======================================================== */
+    .preview-window-container {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      margin: 54px 12px 10px 12px;
+      background: #090a10;
+      border: 1px solid var(--border-light);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.85), inset 0 0 35px rgba(0, 0, 0, 0.75);
+      position: relative;
+      z-index: 20;
+    }
+
+    .preview-window-header {
+      height: 32px;
+      background: #12131c;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--text-muted);
+      flex-shrink: 0;
+      z-index: 25;
+    }
+    .window-header-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .window-traffic-dots {
+      display: flex;
+      gap: 5px;
+      align-items: center;
+    }
+    .win-dot {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+    }
+    .win-dot-red { background: #ff5f56; }
+    .win-dot-yellow { background: #ffbd2e; }
+    .win-dot-green { background: #27c93f; }
+
+    .window-title {
+      color: #e4e4e7;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+    }
+    .preview-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--accent-green);
+      font-size: 0.6rem;
+      background: rgba(0, 255, 136, 0.1);
+      border: 1px solid rgba(0, 255, 136, 0.25);
+      padding: 0.12rem 0.4rem;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .window-header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .preview-screen-stage {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1250px;
+      perspective-origin: center center;
+      touch-action: none;
+      cursor: grab;
+      background: radial-gradient(circle at 50% 50%, #0e111a 0%, #050608 100%);
+    }
+    .preview-screen-stage:active { cursor: grabbing; }
+
+    /* 3D Wheel Track & Cards */
+    .wheel-track {
+      position: relative;
+      width: 100%; height: 100%;
+      transform-style: preserve-3d;
+      pointer-events: none;
+      will-change: transform;
+    }
+    
+    /* Standard Vertical 9:16 Card */
+    .vertical-card {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: clamp(200px, 19vw, 255px);
+      aspect-ratio: 9 / 16;
+      border-radius: 16px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.9);
+      pointer-events: auto;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      will-change: transform, opacity, filter;
+      transition: border-color 0.3s, box-shadow 0.3s;
+      -webkit-box-reflect: below 8px linear-gradient(transparent, transparent 65%, rgba(255, 255, 255, 0.12));
+    }
+    
+    /* Dynamic Horizontal 16:9 Cinema Card */
+    .vertical-card.is-horizontal {
+      width: clamp(270px, 28vw, 360px);
+      aspect-ratio: 16 / 9;
+      border-radius: 12px;
+    }
+
+    .vertical-card.active {
+      border-color: rgba(56, 189, 248, 0.85);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.95), 0 0 40px rgba(56, 189, 248, 0.35);
+    }
+    .card-video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      pointer-events: none;
+      background: #050608;
+      transition: filter 0.3s ease;
+    }
+    .card-gradient-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, transparent 30%, transparent 65%, rgba(0,0,0,0.92) 100%);
+      pointer-events: none;
+    }
+
+    .smpte-bars-screen {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, #c0c0c0 0%, #c0c0c0 14.28%, #c0c000 14.28%, #c0c000 28.56%, #00c0c0 28.56%, #00c0c0 42.84%, #00c000 42.84%, #00c000 57.12%, #c000c0 57.12%, #c000c0 71.4%, #c00000 71.4%, #c00000 85.68%, #0000c0 85.68%, #0000c0 100%);
+      z-index: 15;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #000;
+      text-shadow: 0 0 2px #fff;
+    }
+    .smpte-bars-screen.active { display: flex; }
+
+    .card-top-info {
+      position: absolute;
+      top: 12px; left: 14px; right: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      z-index: 10;
+    }
+    .card-clip-badge {
+      background: rgba(0, 0, 0, 0.75);
+      border: 1px solid var(--border);
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      color: #fff;
+    }
+    .card-aspect-tag {
+      background: rgba(56, 189, 248, 0.2);
+      border: 1px solid rgba(56, 189, 248, 0.4);
+      color: var(--accent);
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .card-3d-tag {
+      background: rgba(168, 85, 247, 0.25);
+      border: 1px solid rgba(168, 85, 247, 0.5);
+      color: #d8b4fe;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-weight: 700;
+    }
+    .card-bottom-info {
+      position: absolute;
+      bottom: 14px; left: 14px; right: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+      z-index: 10;
+    }
+    .card-category {
+      font-size: 0.62rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      line-height: 1.05;
+      text-transform: uppercase;
+    }
+    .card-client {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+    .play-pill {
+      margin-top: 0.35rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(8px);
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      width: fit-content;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    /* ========================================================
+       3. AUTHENTIC STUDIO TIMELINE DOCK
+       ======================================================== */
+    .studio-timeline-dock {
+      width: 100%;
+      background: #0d0e13;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 90;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.85);
+      font-family: 'JetBrains Mono', monospace;
+      flex-shrink: 0;
+    }
+
+    .timeline-chrome-header {
+      height: 34px;
+      background: #111218;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.8rem;
+    }
+    .chrome-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.72rem;
+    }
+    .studio-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 0.15rem 0.55rem;
+      border-radius: 4px;
+      font-weight: 700;
+      color: #fff;
+      font-size: 0.68rem;
+    }
+    .studio-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: #f43f5e;
+      box-shadow: 0 0 6px #f43f5e;
+    }
+    .chrome-slash { color: #52525b; }
+    .chrome-project { font-weight: 600; color: #e4e4e7; }
+    .chrome-fps-res { color: #38bdf8; font-weight: 600; }
+
+    .chrome-center {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .transport-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .transport-btn {
+      background: #1a1b23;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #e4e4e7;
+      padding: 0.22rem 0.45rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.7rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    .transport-btn:hover { background: #272835; }
+    .transport-play {
+      background: var(--dv-purple-play);
+      border-color: var(--dv-purple-play);
+      color: #fff;
+    }
+    .transport-play:hover { filter: brightness(1.2); }
+    .green-timecode-box {
+      background: #050608;
+      border: 1px solid rgba(0, 255, 136, 0.4);
+      color: var(--accent-green);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 0.15rem 0.5rem;
+      border-radius: 4px;
+      box-shadow: 0 0 10px rgba(0, 255, 136, 0.15), inset 0 0 8px rgba(0, 0, 0, 0.8);
+    }
+
+    .chrome-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .vu-meter-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .stereo-bars {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      width: 40px;
+    }
+    .vu-bar {
+      height: 4px;
+      background: linear-gradient(90deg, #22c55e 0%, #eab308 75%, #ef4444 100%);
+      border-radius: 1px;
+      position: relative;
+    }
+    .vu-bar-mask {
+      position: absolute;
+      right: 0; top: 0; bottom: 0;
+      background: #111218;
+      width: 25%;
+      transition: width 0.08s ease-out;
+    }
+    .vu-db-text {
+      font-size: 0.62rem;
+      color: #a1a1aa;
+      font-weight: 600;
+    }
+
+    .timeline-ruler {
+      height: 18px;
+      background: #13141a;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 1rem 0 100px;
+      font-size: 0.6rem;
+      color: #52525b;
+      position: relative;
+    }
+
+    .tracks-wrapper {
+      display: flex;
+      position: relative;
+      background: #090a0d;
+    }
+
+    .track-headers-sidebar {
+      width: 95px;
+      flex-shrink: 0;
+      background: #13141d;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+    }
+    .track-header-row {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.5rem;
+      font-size: 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      color: #71717a;
+    }
+    .track-num { font-weight: 700; color: #fff; }
+    .track-tag-vfx { color: #c084fc; font-weight: 600; font-size: 0.58rem; }
+    .track-tag-3d { color: #38bdf8; font-weight: 600; font-size: 0.58rem; }
+    .track-tag-sfx { color: var(--accent-green); font-weight: 600; font-size: 0.58rem; }
+
+    .track-interactive-toggle {
+      cursor: pointer;
+      font-size: 0.65rem;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .track-interactive-toggle:hover { transform: scale(1.15); }
+    .track-interactive-toggle.muted {
+      opacity: 0.3;
+      filter: grayscale(1);
+    }
+
+    .timeline-lanes-area {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      cursor: ew-resize;
+      display: flex;
+      flex-direction: column;
+      padding-top: 1px;
+    }
+
+    .track-lane {
+      height: 24px;
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      padding: 0 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+      position: relative;
+    }
+
+    /* INTERACTIVE V2 LUT ADJUSTMENT CLIP */
+    .v2-adjustment-clip {
+      width: 58%;
+      height: 18px;
+      background: var(--dv-v2);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 0.5rem;
+      font-size: 0.56rem;
+      font-weight: 700;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+    .v2-adjustment-clip:hover {
+      filter: brightness(1.2);
+      box-shadow: 0 0 12px rgba(217, 70, 239, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    }
+
+    .v1-clip-block {
+      height: 19px;
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      padding: 0 0.22rem;
+      font-size: 0.46rem;
+      font-weight: 700;
+      color: rgba(255, 255, 255, 0.95);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+      cursor: pointer;
+      transition: filter 0.2s;
+    }
+    .v1-clip-block:hover { filter: brightness(1.25); }
+
+    .a1-audio-dashes {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      gap: 3px;
+      padding: 0 4px;
+      transition: opacity 0.3s;
+    }
+    .audio-dash {
+      height: 8px;
+      background: #00ff88;
+      border-radius: 2px;
+      opacity: 0.75;
+      flex-shrink: 0;
+      box-shadow: 0 0 4px rgba(0, 255, 136, 0.3);
+    }
+
+    #timeline-playhead-group {
+      position: absolute;
+      top: -18px;
+      bottom: 0;
+      left: 95px;
+      width: 2px;
+      pointer-events: none;
+      z-index: 50;
+      will-change: transform;
+    }
+    .playhead-diamond {
+      position: absolute;
+      top: 0;
+      left: -5px;
+      width: 12px;
+      height: 12px;
+      background: #f43f5e;
+      transform: rotate(45deg);
+      box-shadow: 0 0 10px #f43f5e;
+    }
+    .playhead-line {
+      position: absolute;
+      top: 10px;
+      bottom: 0;
+      left: 0;
+      width: 2px;
+      background: #f43f5e;
+      box-shadow: 0 0 8px rgba(244, 63, 94, 0.8);
+    }
+
+    /* ========================================================
+       4. CLIENT FEEDBACK STICKY NOTE (CONTACT MODAL)
+       ======================================================== */
+    .sticky-note-wrapper {
+      position: relative;
+      max-width: 440px;
+      width: 90vw;
+      background: #fef08a;
+      color: #1c1917;
+      padding: 2rem 1.8rem 1.8rem 1.8rem;
+      border-radius: 4px;
+      box-shadow: 0 15px 35px rgba(0,0,0,0.6), 0 30px 65px rgba(0,0,0,0.85);
+      transform: rotate(-2deg);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .sticky-note-wrapper:hover {
+      transform: rotate(0deg) scale(1.02);
+    }
+    .sticky-tape {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%) rotate(1deg);
+      width: 110px;
+      height: 28px;
+      background: rgba(255, 255, 255, 0.55);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.12);
+      backdrop-filter: blur(2px);
+    }
+    .sticky-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px dashed rgba(28, 25, 23, 0.2);
+      padding-bottom: 0.8rem;
+      margin-bottom: 1rem;
+    }
+    .sticky-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 800;
+      line-height: 1.1;
+      color: #0c0a09;
+    }
+    .sticky-memo-text {
+      font-size: 0.82rem;
+      line-height: 1.45;
+      color: #292524;
+      margin-bottom: 1.2rem;
+      font-weight: 500;
+    }
+    .sticky-contacts {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+    .sticky-link-card {
+      background: rgba(0, 0, 0, 0.06);
+      border: 1px solid rgba(0, 0, 0, 0.12);
+      padding: 0.65rem 0.85rem;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #1c1917;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+    .sticky-link-card:hover {
+      background: #000;
+      color: #fff;
+    }
+    .sticky-link-label {
+      font-size: 0.68rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      opacity: 0.7;
+    }
+    .sticky-link-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+    }
+    .sticky-peel-btn {
+      background: #1c1917;
+      color: #fef08a;
+      border: none;
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    .sticky-peel-btn:hover { opacity: 0.85; }
+
+    /* ========================================================
+       5. ADAPTIVE VIDEO MODAL (RESPONSIVE PHONE & CINEMA)
+       ======================================================== */
+    .nle-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+      z-index: 500;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 1.2rem;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .nle-modal-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .video-modal-layout {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+      max-width: 820px;
+      width: 100%;
+      position: relative;
+    }
+
+    .modal-close-floating {
+      display: none;
+      position: absolute;
+      top: -38px;
+      right: 0;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid var(--border);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.85rem;
+      align-items: center;
+      justify-content: center;
+      z-index: 60;
+    }
+
+    /* Vertical 9:16 Frame */
+    .phone-mockup {
+      width: 290px;
+      height: 515px;
+      background: #000;
+      border-radius: 28px;
+      border: 3px solid #272830;
+      overflow: hidden;
+      position: relative;
+      flex-shrink: 0;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Widescreen 16:9 Frame */
+    .phone-mockup.is-horizontal {
+      width: clamp(300px, 46vw, 480px);
+      height: auto;
+      aspect-ratio: 16 / 9;
+      border-radius: 14px;
+      border: 2px solid #3b3d4f;
+    }
+
+    .phone-mockup video {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      border: none;
+    }
+
+    .video-specs {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .specs-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+    }
+    .spec-line {
+      display: flex;
+      justify-content: space-between;
+      color: var(--text-muted);
+    }
+    .spec-line span:last-child {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* Standard Modals (Experience) */
+    .modal-box {
+      background: #14151a;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      max-width: 760px;
+      width: 100%;
+      max-height: 88vh;
+      overflow-y: auto;
+      padding: 1.8rem;
+      position: relative;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.95);
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+    }
+    .modal-top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 0.8rem;
+    }
+    .modal-headline {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 800;
+    }
+    .btn-close-modal {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      color: #fff;
+      padding: 0.4rem 0.8rem;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+    }
+
+    .experience-summary-badge {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--accent);
+      line-height: 1.4;
+    }
+    .exp-item {
+      padding: 0.9rem 0;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+    .exp-item:last-child { border-bottom: none; }
+    .exp-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.3rem;
+    }
+    .exp-role {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .exp-period {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+    }
+    .exp-company {
+      font-size: 0.82rem;
+      color: var(--accent-3d);
+      font-weight: 600;
+    }
+    .exp-desc {
+      font-size: 0.8rem;
+      color: #c4c4cc;
+      line-height: 1.4;
+      margin-top: 0.2rem;
+    }
+    .freelance-brand-tag {
+      display: inline-block;
+      background: rgba(192, 132, 252, 0.15);
+      border: 1px solid rgba(192, 132, 252, 0.35);
+      color: #e9d5ff;
+      padding: 0.2rem 0.55rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      margin-right: 0.3rem;
+      margin-top: 0.3rem;
+    }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 0.6rem;
+      margin-top: 0.4rem;
+    }
+    .skill-chip {
+      background: var(--surface-elevated);
+      border: 1px solid var(--border);
+      padding: 0.5rem 0.7rem;
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      text-align: center;
+      color: var(--text);
+    }
+
+    /* ========================================================
+       6. MOBILE RESPONSIVE OPTIMIZATION
+       ======================================================== */
+    @media (max-width: 768px) {
+      .chrome-fps-res, .vu-meter-wrap, .chrome-slash, .chrome-project { display: none; }
+      .preview-window-container { margin: 50px 6px 6px 6px; border-radius: 8px; }
+      .timeline-ruler { padding-left: 75px; }
+      .track-headers-sidebar { width: 70px; }
+      #timeline-playhead-group { left: 70px; }
+      .v1-clip-block { font-size: 0.42rem; padding: 0 0.1rem; }
+      .modal-box { padding: 1.2rem; }
+      .window-stat-fps { display: none; }
+
+      /* Mobile Modal Layout Fix */
+      .nle-modal-overlay {
+        align-items: flex-start;
+        padding: 2.8rem 0.8rem 1.8rem 0.8rem;
+      }
+      .video-modal-layout {
+        flex-direction: column;
+        align-items: center;
+        gap: 0.9rem;
+        max-width: 360px;
+        margin: 0 auto;
+      }
+      .modal-close-floating {
+        display: flex;
+      }
+      .phone-mockup {
+        width: 175px;
+        height: 310px;
+        border-radius: 20px;
+        border-width: 2px;
+      }
+      .phone-mockup.is-horizontal {
+        width: 100%;
+        max-width: 330px;
+        height: auto;
+        aspect-ratio: 16 / 9;
+        border-radius: 10px;
+      }
+      .video-specs {
+        width: 100%;
+        gap: 0.6rem;
+      }
+      #modal-title {
+        font-size: 1.3rem !important;
+        line-height: 1.1;
+      }
+      .specs-card {
+        padding: 0.75rem;
+        font-size: 0.68rem;
+        gap: 0.4rem;
+      }
+      #btn-close-video {
+        width: 100% !important;
+        justify-content: center;
+        padding: 0.65rem;
+        font-size: 0.72rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .editor-top-bar { padding: 0 0.5rem; }
+      .nav-pill-btn { padding: 0.32rem 0.55rem; font-size: 0.65rem; }
+      .timeline-name { font-size: 0.65rem; max-width: 120px; }
+      .v2-adjustment-clip { width: 75%; font-size: 0.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- AMBIENT MOVING GRADIENT BACKGROUND -->
+  <div class="ambient-gradient-stage">
+    <div class="gradient-orb orb-cyan"></div>
+    <div class="gradient-orb orb-purple"></div>
+  </div>
+  <div class="grain-overlay"></div>
+
+  <!-- BROADCAST HUD OVERLAY -->
+  <div class="broadcast-hud" id="broadcast-hud">LUT: REC.709</div>
+
+  <!-- 1. TOP NLE MASTER HEADER -->
+  <header class="editor-top-bar">
+    <div class="project-metadata">
+      <div class="status-dot"></div>
+      <span class="timeline-name">Galav_chaudhari_Portfolio.nle</span>
+    </div>
+
+    <!-- Actions: Experience & Contact -->
+    <div class="top-nav-actions">
+      <button class="nav-pill-btn" id="btn-open-experience">
+        <i data-lucide="layers" style="width: 12px; height: 12px;"></i> EXPERIENCE
+      </button>
+      <button class="nav-pill-btn primary" id="btn-open-contact">
+        <i data-lucide="message-square" style="width: 12px; height: 12px;"></i> CONTACT
+      </button>
+    </div>
+  </header>
+
+  <!-- 2. SHOWREEL PREVIEW WINDOW UI -->
+  <section class="preview-window-container">
+    <div class="preview-window-header">
+      <div class="window-header-left">
+        <div class="window-traffic-dots">
+          <div class="win-dot win-dot-red"></div>
+          <div class="win-dot win-dot-yellow"></div>
+          <div class="win-dot win-dot-green"></div>
+        </div>
+        <span class="window-title">SHOWREEL PREVIEW</span>
+        <span class="preview-status-badge" id="preview-status-badge">● PREVIEWING</span>
+      </div>
+
+      <div class="window-header-right">
+        <span class="window-stat-fps" style="color: var(--accent);">60.00 FPS</span>
+        <span id="window-res-tag">1080×1920 (9:16)</span>
+        <span>FIT: 100%</span>
+      </div>
+    </div>
+
+    <!-- Monitor Screen Stage -->
+    <div class="preview-screen-stage" id="wheel-stage">
+      <div class="wheel-track" id="wheel-track"></div>
+    </div>
+  </section>
+
+  <!-- 3. AUTHENTIC STUDIO TIMELINE DOCK -->
+  <footer class="studio-timeline-dock">
+    <div class="timeline-chrome-header">
+      <div class="chrome-left">
+        <div class="studio-badge">
+          <span class="studio-badge-dot"></span>
+          <span>REELFOLIO STUDIO</span>
+        </div>
+        <span class="chrome-slash">/</span>
+        <span class="chrome-project">Galav_chaudhari_Portfolio.drp</span>
+        <span class="chrome-fps-res">60.00 FPS · 4K 9:16</span>
+      </div>
+
+      <div class="chrome-center">
+        <div class="transport-controls">
+          <button class="transport-btn" id="btn-prev-clip" title="Previous Clip [◀ / J]">|◀</button>
+          <button class="transport-btn transport-play" id="btn-play-pause" title="Play/Pause [Space]">▶</button>
+          <button class="transport-btn" id="btn-next-clip" title="Next Clip [▶ / L]">▶|</button>
+        </div>
+        <div class="green-timecode-box" id="timecode-readout">01:00:00:00</div>
+      </div>
+
+      <div class="chrome-right">
+        <div class="vu-meter-wrap">
+          <i data-lucide="volume-2" style="width: 12px; height: 12px; color: #22c55e;"></i>
+          <div class="stereo-bars">
+            <div class="vu-bar"><div class="vu-bar-mask" id="vu-mask-l"></div></div>
+            <div class="vu-bar"><div class="vu-bar-mask" id="vu-mask-r"></div></div>
+          </div>
+          <span class="vu-db-text" id="vu-db-text">-6dB</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timeline Ruler -->
+    <div class="timeline-ruler">
+      <span>01:00:00:00</span>
+      <span>01:00:15:00</span>
+      <span>01:00:30:00</span>
+      <span>01:00:45:00</span>
+      <span>01:01:00:00</span>
+    </div>
+
+    <!-- Multi-Track Body -->
+    <div class="tracks-wrapper">
+      <div class="track-headers-sidebar">
+        <!-- V2 Header with interactive eye -->
+        <div class="track-header-row">
+          <span class="track-num" style="color: #d946ef;">V2</span>
+          <span class="track-tag-vfx">VFX</span>
+          <span class="track-interactive-toggle" id="toggle-v2-eye" title="Toggle Grade Layer">👁</span>
+        </div>
+        <!-- V1 Header with interactive eye -->
+        <div class="track-header-row">
+          <span class="track-num" style="color: #38bdf8;">V1</span>
+          <span class="track-tag-3d">3D</span>
+          <span class="track-interactive-toggle" id="toggle-v1-eye" title="Mute Video / Show SMPTE Pattern">👁</span>
+        </div>
+        <!-- A1 Header with interactive speaker -->
+        <div class="track-header-row">
+          <span class="track-num" style="color: #00ff88;">A1</span>
+          <span class="track-tag-sfx">SFX</span>
+          <span class="track-interactive-toggle" id="toggle-a1-audio" title="Mute Audio Waveforms">🔊</span>
+        </div>
+      </div>
+
+      <div class="timeline-lanes-area" id="timeline-area">
+        <div id="timeline-playhead-group">
+          <div class="playhead-diamond"></div>
+          <div class="playhead-line"></div>
+        </div>
+
+        <!-- INTERACTIVE V2 LUT ADJUSTMENT CLIP -->
+        <div class="track-lane">
+          <div class="v2-adjustment-clip" id="v2-lut-clip" title="Click to cycle Live Film Look LUTs">
+            <span id="v2-lut-name">V2: [LUT_REC709]</span>
+            <span style="opacity: 0.7; font-size: 0.5rem;">● CLICK TO CYCLE</span>
+          </div>
+        </div>
+
+        <div class="track-lane" id="v1-track"></div>
+
+        <div class="track-lane">
+          <div class="a1-audio-dashes" id="a1-audio-dashes"></div>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- 4. DIRECTOR'S STICKY NOTE CONTACT MEMO -->
+  <div class="nle-modal-overlay" id="modal-contact">
+    <div class="sticky-note-wrapper">
+      <div class="sticky-tape"></div>
+
+      <div class="sticky-header">
+        <div>
+          <span style="font-family:'JetBrains Mono',monospace; font-size:0.65rem; font-weight:700; color:#57534e;">MEMO // CLIENT FEEDBACK & BOOKING</span>
+          <h2 class="sticky-title">NOTE TO GALAV</h2>
+        </div>
+        <button class="sticky-peel-btn" id="btn-close-sticky">PEEL OFF [✕]</button>
+      </div>
+
+      <p class="sticky-memo-text">
+        "Loved the rhythm cuts and 3D work! Reaching out regarding an upcoming campaign / commercial edit."
+      </p>
+
+      <div class="sticky-contacts">
+        <a href="https://wa.me/917046952883" target="_blank" class="sticky-link-card">
+          <span class="sticky-link-label">DIRECT WHATSAPP / CALL:</span>
+          <span class="sticky-link-val">+91 70469 52883</span>
+        </a>
+
+        <a href="mailto:shlokchaudhari6@gmail.com" class="sticky-link-card">
+          <span class="sticky-link-label">PRIMARY INBOX:</span>
+          <span class="sticky-link-val">shlokchaudhari6@gmail.com</span>
+        </a>
+
+        <a href="https://www.instagram.com/shlokholm_syndrome/" target="_blank" rel="noopener noreferrer" class="sticky-link-card">
+          <span class="sticky-link-label">INSTAGRAM:</span>
+          <span class="sticky-link-val">@shlokholm_syndrome</span>
+        </a>
+
+        <div style="padding: 0.5rem 0.85rem; font-size: 0.72rem; color: #44403c; display:flex; justify-content:space-between; align-items:center;">
+          <span>📍 Andheri West, Mumbai (Remote Globally)</span>
+          <button id="btn-copy-sticky-email" style="background:#0c0a09; color:#fef08a; border:none; padding:0.25rem 0.55rem; border-radius:4px; font-family:'JetBrains Mono',monospace; font-size:0.62rem; cursor:pointer; font-weight:700;">COPY EMAIL</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. EXPERIENCE & CREDITS MODAL -->
+  <div class="nle-modal-overlay" id="modal-experience">
+    <div class="modal-box">
+      <div class="modal-top-bar">
+        <div>
+          <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: var(--accent);">PRODUCTION PIPELINE & CREDITS</span>
+          <h2 class="modal-headline">EXPERIENCE & BACKGROUND</h2>
+        </div>
+        <button class="btn-close-modal" id="btn-close-exp">ESC ✕</button>
+      </div>
+
+      <div class="experience-summary-badge">
+        Video Editor & 3D Artist specializing exclusively in <strong>After Effects, DaVinci Resolve, and Blender 3D</strong>. Crafting high-converting short-form retention edits, entertainment promos, and photorealistic CGI visuals.
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <span class="exp-role">Video Editor</span>
+          <span class="exp-period">JANUARY 2026 — PRESENT</span>
+        </div>
+        <span class="exp-company">The Palette Studio</span>
+        <p class="exp-desc">Directing cutting-edge video editing for premium brands and high-growth campaigns. Crafting compelling visual stories engineered with DaVinci Resolve pacing, kinetic After Effects transitions, and immersive sound design.</p>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <span class="exp-role">Video Editor & Motion Designer</span>
+          <span class="exp-period">JANUARY 2023 — DECEMBER 2025</span>
+        </div>
+        <span class="exp-company">Zee Studios</span>
+        <p class="exp-desc">Spearheaded motion graphics and promotional video editing across major theatrical and digital releases using After Effects and DaVinci Resolve. Built high-impact visual content to strengthen brand communication.</p>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <span class="exp-role">Video Editor & Motion Designer</span>
+          <span class="exp-period">NOVEMBER 2021 — DECEMBER 2022</span>
+        </div>
+        <span class="exp-company">AJIO (Reliance Retail)</span>
+        <p class="exp-desc">Engineered dynamic social media video cuts, product launch visuals, and marketing assets. Elevated visual storytelling through thoughtful motion layouts and consistent high-fashion brand aesthetics.</p>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header">
+          <span class="exp-role">Video Editor & 3D Generalist</span>
+          <span class="exp-period">PREVIOUS CORE TENURE</span>
+        </div>
+        <span class="exp-company">GV Square Digital Solutions</span>
+        <p class="exp-desc">Produced impactful video edits, motion graphics, and 3D assets in Blender for brand campaigns and commercial clients.</p>
+      </div>
+
+      <div class="exp-item" style="background: rgba(255, 255, 255, 0.02); padding: 1rem; border-radius: 8px;">
+        <div class="exp-header">
+          <span class="exp-role" style="color: var(--accent-3d);">Freelance Brand Collaborations</span>
+          <span class="exp-period" style="color: #4ade80;">FREELANCED</span>
+        </div>
+        <span class="exp-company">Key Clients & Commercial Accounts</span>
+        <p class="exp-desc" style="margin-bottom: 0.5rem;">Delivering offline video cutting, 3D texturing, product rendering, and motion design:</p>
+        <div>
+          <span class="freelance-brand-tag">Off Duty Jeans</span>
+          <span class="freelance-brand-tag">Birds of Paradyes</span>
+          <span class="freelance-brand-tag">Surya Clothing (Blender 3D Renders)</span>
+          <span class="freelance-brand-tag">Julahaa Sarees</span>
+          <span class="freelance-brand-tag">BOSS Appliances</span>
+          <span class="freelance-brand-tag">Abu Dhabi Tourism</span>
+          <span class="freelance-brand-tag">The Sleep Company</span>
+        </div>
+      </div>
+
+      <!-- Education & Credentials -->
+      <div style="border-top: 1px solid var(--border); padding-top: 1rem;">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent); display: block; margin-bottom: 0.4rem;">FORMAL EDUCATION:</span>
+        <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.8rem;">
+          <div>
+            <strong>Bachelor of Design (B.Des)</strong><br>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">National Institute of Design (NID), Ahmedabad</span>
+          </div>
+          <div>
+            <strong>Bachelor of Science (B.Sc.) in Animation & Video Graphics</strong><br>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">Frameboxx Animation & Visual Effects Pvt Ltd • Dec 2022</span>
+          </div>
+          <div>
+            <strong>High School Graduate Diploma (Science)</strong><br>
+            <span style="color: var(--text-muted); font-size: 0.75rem;">Vasishtha Genesis School • April 2018</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--text-muted); display: block; margin-bottom: 0.4rem;">PRIMARY TOOLKIT & PIPELINE:</span>
+        <div class="skills-grid">
+          <div class="skill-chip" style="border-color: rgba(192, 132, 252, 0.4); color: #e9d5ff;">Adobe After Effects</div>
+          <div class="skill-chip" style="border-color: rgba(56, 189, 248, 0.4); color: #bae6fd;">DaVinci Resolve</div>
+          <div class="skill-chip" style="border-color: rgba(249, 115, 22, 0.4); color: #fdba74;">Blender 3D</div>
+          <div class="skill-chip">Motion Graphics</div>
+          <div class="skill-chip">Color Grading</div>
+          <div class="skill-chip">3D Texturing & Shading</div>
+          <div class="skill-chip">Sound Design</div>
+          <div class="skill-chip">Visual Storytelling</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. ADAPTIVE VIDEO MODAL (RESPONSIVE FOR MOBILE DETAILS) -->
+  <div class="nle-modal-overlay" id="modal-video">
+    <div class="video-modal-layout">
+      <!-- Mobile Floating Close Button -->
+      <button class="modal-close-floating" id="btn-close-video-top" title="Close [ESC]">✕</button>
+
+      <div class="phone-mockup" id="phone-mockup">
+        <video id="modal-video-player" playsinline controls loop></video>
+      </div>
+
+      <div class="video-specs">
+        <span style="font-family: 'JetBrains Mono', monospace; font-size: 0.72rem; color: var(--accent);" id="modal-badge">CUT: [01_MYNTRA]</span>
+        <h2 style="font-family: 'Syne', sans-serif; font-size: 2rem; font-weight: 800; line-height: 1.05;" id="modal-title">PROJECT TITLE</h2>
+        
+        <div class="specs-card">
+          <div class="spec-line">
+            <span>CLIENT / BRAND:</span>
+            <span id="modal-client">Myntra</span>
+          </div>
+          <div class="spec-line">
+            <span>PIPELINE:</span>
+            <span id="modal-pipeline">DaVinci Resolve + After Effects</span>
+          </div>
+          <div class="spec-line">
+            <span>EXPERTISE:</span>
+            <span>Rhythm Cut, Visual Storytelling & Sound Design</span>
+          </div>
+          <div class="spec-line">
+            <span>RESOLUTION:</span>
+            <span id="modal-res">1080×1920 (Vertical 9:16)</span>
+          </div>
+        </div>
+
+        <button class="nav-pill-btn primary" id="btn-close-video" style="width: fit-content; padding: 0.8rem 1.6rem;">
+          RETURN TO TIMELINE [ESC]
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- 1. FULL 18 PROJECTS IN EXACT NEW ORDER ---
+    const PROJECTS = [
+      {
+        id: "01",
+        title: "MYNTRA",
+        client: "Myntra (Fashion As You Like It)",
+        category: "Fashion Pacing & E-Commerce",
+        pipeline: "DaVinci Resolve + After Effects",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:52",
+        color: "#1e3a8a",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740518/01_myntra.mp4"
+      },
+      {
+        id: "02",
+        title: "SMIRNOFF",
+        client: "Smirnoff (Lemon Pop)",
+        category: "Street Vibe & Fast Pacing",
+        pipeline: "After Effects + Sound Design",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:20",
+        color: "#4338ca",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740500/02_smirnoff.mp4"
+      },
+      {
+        id: "03",
+        title: "THE ORDINARY",
+        client: "The Ordinary Skincare",
+        category: "Skincare Narrative & DJ Rhythm",
+        pipeline: "DaVinci Resolve (Color & Pacing)",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:58",
+        color: "#065f46",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740586/03_the_ordinary.mp4"
+      },
+      {
+        id: "04",
+        title: "ALPHATHETA",
+        client: "AlphaTheta (Euphonia)",
+        category: "Rotary Mixer Commercial",
+        pipeline: "DaVinci Resolve + After Effects",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:31",
+        color: "#0e7490",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740500/04_alphatheta.mp4"
+      },
+      {
+        id: "05",
+        title: "GOOGLE PIXEL 11",
+        client: "Google Pixel 11 Pro",
+        category: "Magic Capture Lifestyle Story",
+        pipeline: "DaVinci Resolve + After Effects",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:44",
+        color: "#1e40af",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740542/05_google_pixel.mp4"
+      },
+      {
+        id: "06",
+        title: "ZYRO",
+        client: "Zyro Energy Pop",
+        category: "High-Energy Street Dance",
+        pipeline: "After Effects (Speed Ramps & SFX)",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:36",
+        color: "#3730a3",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740559/06_zyro.mp4"
+      },
+      {
+        id: "07",
+        title: "URBAN COMPANY",
+        client: "Urban Company (Korean Glass Skin)",
+        category: "Celebrity Commercial Cut",
+        pipeline: "DaVinci Resolve (Finishing & Color)",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:59",
+        color: "#115e59",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740548/07_urban_company_shweta.mp4"
+      },
+      {
+        id: "08",
+        title: "URBAN COMPANY",
+        client: "Urban Company x Forest Essentials",
+        category: "Ayurvedic Luxury Sensory Edit",
+        pipeline: "DaVinci Resolve (Pacing & Audio)",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:54",
+        color: "#831843",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740463/08_urban_company_forest.mp4"
+      },
+      {
+        id: "09",
+        title: "PALMONAS",
+        client: "Palmonas Jewelry (4th Birthday)",
+        category: "Macro Jewelry Sparkle Cut",
+        pipeline: "DaVinci Resolve (Film Looks) + AE",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:32",
+        color: "#581c87",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740442/09_palmonas.mp4"
+      },
+      {
+        id: "10",
+        title: "ODDNOTEVEN",
+        client: "ODD NOT EVEN Streetwear",
+        category: "Tactile Unboxing & Retro Polo",
+        pipeline: "After Effects + Audio Foley",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:30",
+        color: "#155e75",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740527/10_oddnoteven.mp4"
+      },
+      {
+        id: "11",
+        title: "URBAN DECAY",
+        client: "Urban Decay (All Nighter 24H)",
+        category: "Nightlife Sweat-Check & Glam",
+        pipeline: "After Effects + DaVinci Resolve",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:54",
+        color: "#701a75",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740546/11_urban_decay.mp4"
+      },
+      {
+        id: "12",
+        title: "THE SLEEP COMPANY",
+        client: "The Sleep Company (TSC)",
+        category: "Fast-Cut Product Commercial",
+        pipeline: "Premiere Pro + After Effects",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:38",
+        color: "#059669",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792747110/Anik_X_TSC_20th_March_V4_1.mp4"
+      },
+      {
+        id: "13",
+        title: "CGI ROBOT",
+        client: "Surya Clothing VFX",
+        category: "3D Giant Robot on Building VFX",
+        pipeline: "Blender 3D + After Effects (VFX Composite)",
+        has3D: true,
+        isHorizontal: false,
+        duration: "0:12",
+        color: "#4c1d95",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740261/12_cgi_robot.mp4"
+      },
+      {
+        id: "14",
+        title: "CGI GARAGE",
+        client: "Surya Clothing 3D",
+        category: "Neon Garage & 3D Cloth Simulation",
+        pipeline: "Blender 3D (Cycles Shading & Simulation)",
+        has3D: true,
+        isHorizontal: false,
+        duration: "0:21",
+        color: "#064e3b",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792740267/13_cgi_garage.mp4"
+      },
+      {
+        id: "15",
+        title: "JULAHAA SAREES",
+        client: "Julahaa Sarees (Crafted Elegance)",
+        category: "3D Saree Fabric & Simulation",
+        pipeline: "Blender 3D + After Effects",
+        has3D: true,
+        isHorizontal: false,
+        duration: "0:25",
+        color: "#9333ea",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792747511/Julahaa_3d.mp4"
+      },
+      {
+        id: "16",
+        title: "CHK LAUNCH",
+        client: "CHK Footwear (Launch Edit)",
+        category: "Product Launch & Hype Cut",
+        pipeline: "DaVinci Resolve + Sound Foley",
+        has3D: false,
+        isHorizontal: false,
+        duration: "0:30",
+        color: "#d97706",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792747164/CHK_Shoes_Launch_Edit_13th_May_V6_FINAL_1.mp4"
+      },
+      {
+        id: "17",
+        title: "ABU DHABI",
+        client: "Abu Dhabi Tourism ft. Arjun Bijlani",
+        category: "Celebrity Travel Film",
+        pipeline: "DaVinci Resolve (Color & Finishing)",
+        has3D: false,
+        isHorizontal: true,
+        duration: "0:45",
+        color: "#0284c7",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792747041/Arjun_X_Abu_Dhabi_V2_FINAL_HORIZONTAL_3rd_Sept-.mp4"
+      },
+      {
+        id: "18",
+        title: "BOSS",
+        client: "BOSS Appliances ft. Disha Parmar",
+        category: "Home Appliances Promo",
+        pipeline: "After Effects + DaVinci Resolve",
+        has3D: false,
+        isHorizontal: true,
+        duration: "0:35",
+        color: "#4f46e5",
+        videoSrc: "https://res.cloudinary.com/zti9nb8w/video/upload/v1792747481/Disha_X_Boss_V11_FINAL_17th_August-_1.mp4"
+      }
+    ];
+
+    // --- 2. AUDIBLE MECHANICAL JOG CLICK & SNAP AUDIO ---
+    class StudioSound {
+      constructor() {
+        this.ctx = null;
+        this.lastPlay = 0;
+      }
+      init() {
+        if (!this.ctx) {
+          try {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.ctx = new AudioContext();
+          } catch(e) {}
+        }
+        if (this.ctx && this.ctx.state === 'suspended') {
+          this.ctx.resume().catch(() => {});
+        }
+      }
+      scrubTick(pitch = 1) {
+        const now = performance.now();
+        if (now - this.lastPlay < 38) return;
+        this.lastPlay = now;
+
+        this.init();
+        if (!this.ctx) return;
+
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          const freq = Math.min(2000, Math.max(400, 1100 * pitch));
+          osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(100, this.ctx.currentTime + 0.02);
+          
+          gain.gain.setValueAtTime(0.14, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.02);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.025);
+        } catch(e) {}
+      }
+      snapLock() {
+        this.init();
+        if (!this.ctx) return;
+        try {
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(240, this.ctx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(45, this.ctx.currentTime + 0.05);
+          gain.gain.setValueAtTime(0.16, this.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, this.ctx.currentTime + 0.06);
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start();
+          osc.stop(this.ctx.currentTime + 0.065);
+        } catch(e) {}
+      }
+    }
+    const sound = new StudioSound();
+
+    // --- 3. INJECT 3D CARDS (ADAPTIVE 9:16 & 16:9) ---
+    const wheelTrack = document.getElementById('wheel-track');
+    const v1Track = document.getElementById('v1-track');
+    const a1Dashes = document.getElementById('a1-audio-dashes');
+
+    PROJECTS.forEach((proj, idx) => {
+      const card = document.createElement('div');
+      card.className = `vertical-card ${proj.isHorizontal ? 'is-horizontal' : ''}`;
+      card.dataset.index = idx;
+
+      const proxyUrl = proj.videoSrc.replace('/upload/', '/upload/w_540,q_auto,f_auto/');
+      const posterUrl = proj.videoSrc.replace('/upload/', '/upload/w_540,so_0.5,q_auto,f_auto/').replace('.mp4', '.jpg');
+
+      card.innerHTML = `
+        <video class="card-video" src="${proxyUrl}" poster="${posterUrl}" preload="none" muted playsinline webkit-playsinline loop></video>
+        <div class="card-gradient-overlay"></div>
+        <div class="smpte-bars-screen">SMPTE TEST PATTERN // NO SIGNAL</div>
+
+        <div class="card-top-info">
+          <span class="card-clip-badge">[${proj.id}]</span>
+          ${proj.isHorizontal ? '<span class="card-aspect-tag">16:9 WIDE</span>' : ''}
+          ${proj.has3D ? '<span class="card-3d-tag">3D ART</span>' : ''}
+          <span style="color: var(--accent); font-weight:700;">${proj.duration}</span>
+        </div>
+        <div class="card-bottom-info">
+          <span class="card-category">${proj.category}</span>
+          <h3 class="card-title">${proj.title}</h3>
+          <p class="card-client">${proj.client}</p>
+          <div class="play-pill">
+            <i data-lucide="play" style="width: 10px; height: 10px; fill: currentColor;"></i> WATCH CUT
+          </div>
+        </div>
+      `;
+
+      card.addEventListener('click', () => {
+        if (Math.abs(currentProgress - idx) < 0.25) {
+          openVideoModal(proj);
+        } else {
+          targetProgress = idx;
+        }
+      });
+
+      const cardVid = card.querySelector('.card-video');
+      
+      // Auto-detect aspect ratio from video metadata
+      cardVid.addEventListener('loadedmetadata', () => {
+        if (cardVid.videoWidth > cardVid.videoHeight) {
+          card.classList.add('is-horizontal');
+          proj.isHorizontal = true;
+        }
+      });
+
+      card.addEventListener('mouseenter', () => {
+        if (Math.abs(currentProgress - idx) < 0.5) cardVid.play().catch(() => {});
+      });
+      card.addEventListener('mouseleave', () => {
+        if (Math.abs(currentProgress - idx) >= 0.35) cardVid.pause();
+      });
+
+      wheelTrack.appendChild(card);
+
+      // Studio V1 Clip Segment
+      const seg = document.createElement('div');
+      seg.className = 'v1-clip-block';
+      seg.style.width = `${100 / PROJECTS.length}%`;
+      seg.style.background = proj.color;
+      seg.title = `[${proj.id}] ${proj.title}`;
+      seg.innerHTML = `<span>${proj.id}_${proj.title.replace(/\s+/g, '_')}</span>`;
+      seg.addEventListener('click', (e) => {
+        e.stopPropagation();
+        targetProgress = idx;
+      });
+      v1Track.appendChild(seg);
+    });
+
+    // Populate Neon Audio Dashes
+    const dashLengths = [18, 28, 12, 35, 14, 22, 40, 15, 25, 30, 16, 22, 34, 18, 26, 12, 38, 20, 15, 28, 32, 14, 24];
+    for (let i = 0; i < 48; i++) {
+      const dash = document.createElement('div');
+      dash.className = 'audio-dash';
+      dash.style.width = `${dashLengths[i % dashLengths.length]}px`;
+      a1Dashes.appendChild(dash);
+    }
+
+    // --- 4. 3D WHEEL & TIMELINE LERP ENGINE ---
+    let currentProgress = 0;
+    let targetProgress = 0;
+    let lastProgressForScrub = 0;
+    let lastActiveCardIdx = -1;
+    const maxIndex = PROJECTS.length - 1;
+
+    const cards = document.querySelectorAll('.vertical-card');
+    const playheadGroup = document.getElementById('timeline-playhead-group');
+    const timecodeReadout = document.getElementById('timecode-readout');
+    const windowResTag = document.getElementById('window-res-tag');
+    const vuMaskL = document.getElementById('vu-mask-l');
+    const vuMaskR = document.getElementById('vu-mask-r');
+    const vuDbText = document.getElementById('vu-db-text');
+
+    function updateWheel() {
+      const diff = targetProgress - currentProgress;
+      if (Math.abs(diff) > 0.0005) {
+        currentProgress += diff * 0.12;
+      } else {
+        currentProgress = targetProgress;
+      }
+
+      // Audible mechanical scrub ticks
+      const scrubVelocity = Math.abs(currentProgress - lastProgressForScrub);
+      lastProgressForScrub = currentProgress;
+
+      if (scrubVelocity > 0.015) {
+        sound.scrubTick(Math.min(2.0, 0.8 + scrubVelocity * 6));
+        vuDbText.innerText = scrubVelocity > 0.08 ? "PEAK 0dB" : "-3dB";
+      } else {
+        vuDbText.innerText = "-6dB";
+      }
+
+      // Snap lock sound on clip center
+      const currentCenteredIdx = Math.round(currentProgress);
+      if (currentCenteredIdx !== lastActiveCardIdx && Math.abs(currentProgress - currentCenteredIdx) < 0.08) {
+        lastActiveCardIdx = currentCenteredIdx;
+        sound.snapLock();
+
+        // Update header resolution tag based on active clip format
+        const activeProj = PROJECTS[currentCenteredIdx];
+        if (activeProj && windowResTag) {
+          windowResTag.innerText = activeProj.isHorizontal ? '1920×1080 (16:9)' : '1080×1920 (9:16)';
+        }
+      }
+
+      const spacing = window.innerWidth < 768 ? 220 : 310;
+      const radiusDepth = 90;
+      const curveAngle = 18;
+
+      cards.forEach((card, i) => {
+        const offset = i - currentProgress;
+        const absOffset = Math.abs(offset);
+
+        const x = offset * spacing;
+        const z = -absOffset * radiusDepth;
+        const rotY = -offset * curveAngle;
+        const scale = Math.max(0.65, 1 - absOffset * 0.12);
+        const opacity = Math.max(0.18, 1 - absOffset * 0.35);
+
+        const blur = absOffset > 1 ? Math.min(4, (absOffset - 0.8) * 2) : 0;
+
+        card.style.transform = `translate3d(calc(-50% + ${x}px), -50%, ${z}px) rotateY(${rotY}deg) scale(${scale})`;
+        card.style.opacity = opacity;
+        card.style.filter = blur > 0 ? `blur(${blur}px)` : 'none';
+        card.style.zIndex = Math.round(100 - absOffset * 10);
+
+        const vid = card.querySelector('.card-video');
+
+        if (absOffset < 0.35) {
+          card.classList.add('active');
+          if (vid.preload === 'none') vid.preload = 'metadata';
+          vid.play().catch(() => {});
+        } else {
+          card.classList.remove('active');
+          if (absOffset > 1.2 && !vid.paused) vid.pause();
+          if (absOffset < 1.5 && vid.preload === 'none') vid.preload = 'metadata';
+        }
+      });
+
+      // Synchronize Playhead
+      const timelineArea = document.getElementById('timeline-area');
+      const laneWidth = timelineArea.clientWidth;
+      const progressPercent = Math.max(0, Math.min(1, currentProgress / maxIndex));
+      
+      const sidebarWidth = window.innerWidth < 768 ? 70 : 95;
+      playheadGroup.style.left = `${sidebarWidth + (progressPercent * (laneWidth - 4))}px`;
+
+      const totalFrames = Math.floor(progressPercent * 3600);
+      const f = String(totalFrames % 60).padStart(2, '0');
+      const s = String(Math.floor(totalFrames / 60) % 60).padStart(2, '0');
+      const m = String(Math.floor(totalFrames / 3600) % 60).padStart(2, '0');
+      timecodeReadout.innerText = `01:${m}:${s}:${f}`;
+
+      const randomJitter = Math.random() * (scrubVelocity > 0.05 ? 35 : 15);
+      vuMaskL.style.width = `${Math.max(5, 30 - randomJitter)}%`;
+      vuMaskR.style.width = `${Math.max(5, 25 - randomJitter)}%`;
+
+      requestAnimationFrame(updateWheel);
+    }
+
+    // --- 5. GESTURES & SCRUBBING ---
+    const wheelStage = document.getElementById('wheel-stage');
+    let isDragging = false;
+    let startX = 0;
+
+    wheelStage.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      startX = e.clientX;
+      sound.init();
+      stopAutoplay();
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (isDragging) {
+        const deltaX = (e.clientX - startX);
+        const sensitivity = window.innerWidth < 768 ? 0.0055 : 0.0038;
+        targetProgress -= deltaX * sensitivity;
+        targetProgress = Math.max(0, Math.min(maxIndex, targetProgress));
+        startX = e.clientX;
+      }
+    });
+
+    window.addEventListener('pointerup', () => {
+      if (isDragging) {
+        isDragging = false;
+        targetProgress = Math.round(targetProgress);
+      }
+    });
+
+    window.addEventListener('wheel', (e) => {
+      sound.init();
+      const delta = Math.abs(e.deltaX) > Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
+      targetProgress += delta * 0.0022;
+      targetProgress = Math.max(0, Math.min(maxIndex, targetProgress));
+      stopAutoplay();
+    }, { passive: true });
+
+    // Timeline Drag
+    const timelineArea = document.getElementById('timeline-area');
+    let isScrubbingTimeline = false;
+
+    timelineArea.addEventListener('pointerdown', (e) => {
+      isScrubbingTimeline = true;
+      scrubTimeline(e);
+      sound.init();
+      stopAutoplay();
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (isScrubbingTimeline) scrubTimeline(e);
+    });
+
+    window.addEventListener('pointerup', () => {
+      if (isScrubbingTimeline) {
+        isScrubbingTimeline = false;
+        targetProgress = Math.round(targetProgress);
+      }
+    });
+
+    function scrubTimeline(e) {
+      const rect = timelineArea.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const ratio = Math.max(0, Math.min(1, clickX / rect.width));
+      targetProgress = ratio * maxIndex;
+    }
+
+    // --- 6. INTERACTIVE V2 LIVE FILM LUT SWITCHER ---
+    const LUTS = [
+      { name: "LUT_REC709", filter: "none", color: "#d946ef" },
+      { name: "LUT_KODAK2383", filter: "sepia(0.2) contrast(1.15) saturate(1.25) brightness(1.02)", color: "#f59e0b" },
+      { name: "LUT_TEAL_ORANGE", filter: "contrast(1.22) saturate(1.35) hue-rotate(-14deg)", color: "#06b6d4" },
+      { name: "LUT_CYBERPUNK", filter: "contrast(1.3) saturate(1.65) hue-rotate(32deg) brightness(1.05)", color: "#ec4899" },
+      { name: "LUT_CINE_LOG", filter: "contrast(0.85) brightness(1.12) saturate(0.68) sepia(0.06)", color: "#a855f7" }
+    ];
+    let currentLutIndex = 0;
+    const v2LutClip = document.getElementById('v2-lut-clip');
+    const v2LutName = document.getElementById('v2-lut-name');
+    const broadcastHud = document.getElementById('broadcast-hud');
+
+    function applyLut(index) {
+      currentLutIndex = index % LUTS.length;
+      const lut = LUTS[currentLutIndex];
+
+      v2LutName.innerText = `V2: [${lut.name}]`;
+      v2LutClip.style.background = lut.color;
+
+      document.querySelectorAll('.card-video').forEach(v => {
+        v.style.filter = lut.filter;
+      });
+      const modalPlayer = document.getElementById('modal-video-player');
+      if (modalPlayer) modalPlayer.style.filter = lut.filter;
+
+      broadcastHud.innerText = `LUT ACTIVE: ${lut.name.replace('LUT_', '')}`;
+      broadcastHud.classList.add('visible');
+      clearTimeout(broadcastHud._timer);
+      broadcastHud._timer = setTimeout(() => {
+        broadcastHud.classList.remove('visible');
+      }, 1500);
+
+      sound.init();
+      sound.scrubTick(1.5);
+    }
+
+    v2LutClip.addEventListener('click', (e) => {
+      e.stopPropagation();
+      applyLut(currentLutIndex + 1);
+    });
+
+    // Toggle V2 Eye (Toggles grade on/off)
+    const toggleV2Eye = document.getElementById('toggle-v2-eye');
+    let isV2Active = true;
+    toggleV2Eye.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isV2Active = !isV2Active;
+      toggleV2Eye.classList.toggle('muted', !isV2Active);
+      v2LutClip.style.opacity = isV2Active ? '1' : '0.25';
+      document.querySelectorAll('.card-video').forEach(v => {
+        v.style.filter = isV2Active ? LUTS[currentLutIndex].filter : 'none';
+      });
+    });
+
+    // Toggle V1 Eye (Toggles Video & Displays SMPTE color test screen)
+    const toggleV1Eye = document.getElementById('toggle-v1-eye');
+    let isV1Active = true;
+    toggleV1Eye.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isV1Active = !isV1Active;
+      toggleV1Eye.classList.toggle('muted', !isV1Active);
+      document.querySelectorAll('.smpte-bars-screen').forEach(s => {
+        s.classList.toggle('active', !isV1Active);
+      });
+    });
+
+    // Toggle A1 Audio Track
+    const toggleA1Audio = document.getElementById('toggle-a1-audio');
+    let isA1Active = true;
+    toggleA1Audio.addEventListener('click', (e) => {
+      e.stopPropagation();
+      isA1Active = !isA1Active;
+      toggleA1Audio.classList.toggle('muted', !isA1Active);
+      a1Dashes.style.opacity = isA1Active ? '1' : '0.15';
+    });
+
+    // --- 7. TRANSPORT CONTROLS ---
+    const btnPlayPause = document.getElementById('btn-play-pause');
+    const previewBadge = document.getElementById('preview-status-badge');
+    let isAutoplaying = false;
+    let autoplayInterval = null;
+
+    function toggleAutoplay() {
+      sound.init();
+      if (isAutoplaying) {
+        stopAutoplay();
+      } else {
+        isAutoplaying = true;
+        btnPlayPause.innerText = '❚❚';
+        btnPlayPause.style.background = '#f43f5e';
+        previewBadge.innerText = '● ROLLING';
+        previewBadge.style.color = '#f43f5e';
+        autoplayInterval = setInterval(() => {
+          targetProgress = targetProgress >= maxIndex ? 0 : targetProgress + 1;
+        }, 3200);
+      }
+    }
+
+    function stopAutoplay() {
+      if (isAutoplaying) {
+        isAutoplaying = false;
+        btnPlayPause.innerText = '▶';
+        btnPlayPause.style.background = 'var(--dv-purple-play)';
+        previewBadge.innerText = '● PREVIEWING';
+        previewBadge.style.color = 'var(--accent-green)';
+        clearInterval(autoplayInterval);
+      }
+    }
+
+    btnPlayPause.addEventListener('click', toggleAutoplay);
+
+    document.getElementById('btn-prev-clip').addEventListener('click', () => {
+      targetProgress = Math.max(0, Math.round(targetProgress - 1));
+      stopAutoplay();
+    });
+
+    document.getElementById('btn-next-clip').addEventListener('click', () => {
+      targetProgress = Math.min(maxIndex, Math.round(targetProgress + 1));
+      stopAutoplay();
+    });
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      sound.init();
+      if (document.querySelector('.nle-modal-overlay.active')) {
+        if (e.key === 'Escape') closeAllModals();
+        return;
+      }
+      if (e.key === 'ArrowRight' || e.key === 'l' || e.key === 'L') {
+        targetProgress = Math.min(maxIndex, Math.round(targetProgress + 1));
+      }
+      if (e.key === 'ArrowLeft' || e.key === 'j' || e.key === 'J') {
+        targetProgress = Math.max(0, Math.round(targetProgress - 1));
+      }
+      if (e.key === ' ' || e.key === 'k' || e.key === 'K') {
+        e.preventDefault();
+        toggleAutoplay();
+      }
+      if (e.key === 'g' || e.key === 'G') {
+        applyLut(currentLutIndex + 1);
+      }
+      if (e.key === 'Enter') {
+        const activeProj = PROJECTS[Math.round(currentProgress)];
+        if (activeProj) openVideoModal(activeProj);
+      }
+    });
+
+    // --- 8. MODALS & ADAPTIVE 9:16 / 16:9 PLAYER ---
+    const modalExp = document.getElementById('modal-experience');
+    const modalContact = document.getElementById('modal-contact');
+    const modalVideo = document.getElementById('modal-video');
+    const videoPlayer = document.getElementById('modal-video-player');
+    const phoneMockup = document.getElementById('phone-mockup');
+    const modalRes = document.getElementById('modal-res');
+
+    function closeAllModals() {
+      [modalExp, modalContact, modalVideo].forEach(m => m.classList.remove('active'));
+      videoPlayer.pause();
+      videoPlayer.src = "";
+    }
+
+    document.getElementById('btn-open-experience').addEventListener('click', () => {
+      closeAllModals();
+      modalExp.classList.add('active');
+    });
+    document.getElementById('btn-close-exp').addEventListener('click', closeAllModals);
+
+    // Open Sticky Note Contact
+    document.getElementById('btn-open-contact').addEventListener('click', () => {
+      closeAllModals();
+      modalContact.classList.add('active');
+    });
+    document.getElementById('btn-close-sticky').addEventListener('click', closeAllModals);
+
+    // Copy Email from Sticky Note
+    document.getElementById('btn-copy-sticky-email').addEventListener('click', () => {
+      navigator.clipboard.writeText('shlokchaudhari6@gmail.com').then(() => {
+        const btn = document.getElementById('btn-copy-sticky-email');
+        btn.innerText = "COPIED ✓";
+        setTimeout(() => {
+          btn.innerText = "COPY EMAIL";
+        }, 2000);
+      }).catch(() => {});
+    });
+
+    function openVideoModal(proj) {
+      closeAllModals();
+      stopAutoplay();
+
+      document.getElementById('modal-badge').innerText = `CUT: [${proj.id}_${proj.title.replace(/\s+/g, '_')}]`;
+      document.getElementById('modal-title').innerText = proj.title;
+      document.getElementById('modal-client').innerText = proj.client;
+      document.getElementById('modal-pipeline').innerText = proj.pipeline;
+
+      // Adapt mockup to 16:9 Cinema Frame or 9:16 Vertical Phone
+      if (proj.isHorizontal) {
+        phoneMockup.classList.add('is-horizontal');
+        modalRes.innerText = "1920×1080 (Widescreen 16:9)";
+      } else {
+        phoneMockup.classList.remove('is-horizontal');
+        modalRes.innerText = "1080×1920 (Vertical 9:16)";
+      }
+
+      // Auto-detect actual aspect ratio if metadata loads
+      videoPlayer.onloadedmetadata = () => {
+        if (videoPlayer.videoWidth > videoPlayer.videoHeight) {
+          phoneMockup.classList.add('is-horizontal');
+          modalRes.innerText = `${videoPlayer.videoWidth}×${videoPlayer.videoHeight} (Widescreen 16:9)`;
+        } else {
+          phoneMockup.classList.remove('is-horizontal');
+          modalRes.innerText = `${videoPlayer.videoWidth}×${videoPlayer.videoHeight} (Vertical 9:16)`;
+        }
+      };
+
+      // Full 1080p master quality streaming in modal
+      videoPlayer.src = proj.videoSrc.replace('/upload/', '/upload/q_auto,f_auto/');
+      videoPlayer.style.filter = LUTS[currentLutIndex].filter;
+      videoPlayer.play().catch(() => {});
+      modalVideo.classList.add('active');
+    }
+
+    document.getElementById('btn-close-video').addEventListener('click', closeAllModals);
+    document.getElementById('btn-close-video-top').addEventListener('click', closeAllModals);
+
+    [modalExp, modalContact, modalVideo].forEach(m => {
+      m.addEventListener('click', (e) => {
+        if (e.target === m) closeAllModals();
+      });
+    });
+
+    // Start Engine
+    requestAnimationFrame(updateWheel);
+    lucide.createIcons();
+  </script>
+</body>
+</html>
